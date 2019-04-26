@@ -1,13 +1,63 @@
-<div class="my-first-vugu-comp">
-    <button @click="data.Toggle()">Test</button>
-    <div vg-if="data.Show">I am here!</div>
+<div class="root">
+    <div class="buttons">
+        <button @click='data.Add()'>Add</button>
+        <button @click='data.Remove()'>Remove</button>
+    </div>
+    <ul vg-for='_, item := range data.Items'>
+        <li vg-html="item"></li>
+    </ul>
 </div>
 
-<style>
-.my-first-vugu-comp { background: #eee; }
-</style>
-
 <script type="application/x-go">
-type RootData struct { Show bool }
-func (data *RootData) Toggle() { data.Show = !data.Show }
+type RootData struct {
+    Items []string
+}
+
+func (data *RootData) Add() {
+    items := data.Items[:]
+    items = append(items, "item")
+    updateItems(data, items)
+}
+
+func (data *RootData) Remove() { 
+    items := data.Items[:]
+    items = items[:len(items)-1]
+    updateItems(data, items)
+}
+
+func updateItems(data *RootData, items []string) {
+    res := make([]string, len(items))
+    copy(res, items)
+    data.Items = res
+}
 </script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.root {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    width: 100vw;
+}
+
+.buttons {
+    flex-direction: row;
+}
+
+.buttons button {
+    font-size: 2rem;
+    padding: 1rem 2rem;
+}
+
+li {
+  color: #7c5a9e;
+  font-size: 2rem;
+}
+</style>
